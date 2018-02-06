@@ -1,0 +1,66 @@
+<div class="panel-default">
+    <div class="panel-body">
+        <form id="myform" method="post" action="/form-event-add">
+            <legend>Add Event</legend>
+            <div id="error-message">
+
+            </div>
+            <fieldset>
+                <div class="form-group">
+                    <label for="event_name">Event</label>
+                    <input id="event_name" name="eventName" class="form-control" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="start_date">Start Date</label>
+                    <input id="start_date" name="startDate" class="form-control" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="end_date">EndDate</label>
+                    <input id="end_date" name="endDate" class="form-control" type="text">
+                </div>
+            </fieldset>
+            <input type="submit" class="btn btn-primary" value="Save">
+            <a  href="/index" class="btn btn-danger">Cancel</a>
+        </form>
+
+    </div>
+
+</div>
+<script>
+    $(function() {
+         $('#start_date').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            timePicker: true,
+            locale: {
+                format: 'MM/DD/YYYY h:mm'
+            }
+         });
+         $('#end_date').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            timePicker: true,
+            locale: {
+                format: 'MM/DD/YYYY h:mm'
+            }
+         });
+         $('#myform').submit(function(event){
+            event.preventDefault();
+            var url = $(this).attr('action');
+            $.post(url, $(this).serialize(), function(jsonData){
+                console.log(jsonData.success);
+                if(jsonData.success==1) {
+                   window.location.replace("/index");
+                }
+                else {
+                   var value = "<div id='error-message' class='alert alert-success alert-dismissable'>"
+                                + jsonData.message
+                                + "</div>";
+                   $('#error-message').replaceWith(value);
+                }
+
+            }, "json");
+         });
+    });
+
+</script>
